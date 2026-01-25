@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --bg-dark: #1E2923;      
+            --bg-light: #F4F5F4;     
+            --accent: #587363;       
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --white: #FFFFFF;
+            --border-color: #E5E7EB;
+            --error: #DC2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-light);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-wrapper {
+            background: var(--white);
+            width: 100%;
+            max-width: 950px;
+            min-height: 650px; 
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- LEFT SIDE --- */
+        .brand-section {
+            flex: 0.8; 
+            background-color: var(--bg-dark);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-section::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: -80px;
+            width: 300px; height: 300px;
+            border-radius: 50%;
+            border: 40px solid rgba(255,255,255,0.03);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #A3B18A;
+            display: flex; align-items: center; gap: 12px;
+            z-index: 2;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.85;
+            z-index: 2;
+        }
+
+        /* --- RIGHT SIDE --- */
+        .form-section {
+            flex: 1.2;
+            padding: 50px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto; 
+        }
+
+        .header-text { margin-bottom: 30px; }
+        .header-text h2 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+        .header-text p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- FORM ELEMENTS --- */
+        .form-group { margin-bottom: 18px; }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px 12px 48px; 
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            outline: none;
+            color: var(--text-main);
+            background: #FAFAFA;
+        }
+
+        input:focus {
+            background: #FFFFFF;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(88, 115, 99, 0.1);
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            margin-top: 10px;
+        }
+        .signup-btn:hover {
+            background-color: #465e50;
+            transform: translateY(-1px);
+        }
+
+        .login-redirect {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .login-redirect a { color: var(--accent); text-decoration: none; font-weight: 700; }
+        .login-redirect a:hover { text-decoration: underline; }
+        
+        /* Error Message Box */
+        #error-msg {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none; /* Hidden by default */
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .auth-wrapper { flex-direction: column; height: auto; }
+            .brand-section { display: none; }
+            .form-section { padding: 40px 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-wrapper">
+        <div class="brand-section">
+            <div class="logo"><i class="fa-solid fa-compass"></i> True Claim</div>
+            <p class="tagline">Join our community to help recover lost items and connect people.</p>
+        </div>
+
+        <div class="form-section">
+            <div class="header-text">
+                <h2>Create Account</h2>
+                <p>Fill in your details to get started.</p>
+            </div>
+
+            <form action="/ProcessSignUp" method="POST" onsubmit="return validateGmail()">
+                
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-id-card"></i>
+                        <input type="text" name="full_name" placeholder="John Doe" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="email" id="emailInput" name="email" placeholder="yourname@gmail.com" required>
+                    </div>
+                    <div id="error-msg"><i class="fa-solid fa-circle-exclamation"></i> Please enter a valid @gmail.com address</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-at"></i>
+                        <input type="text" name="username" placeholder="johndoe123" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" name="password" placeholder="Create a strong password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="signup-btn">Create Account</button>
+            </form>
+
+            <div class="login-redirect">
+                Already have an account? <a href="/login">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validateGmail() {
+            const emailField = document.getElementById('emailInput');
+            const errorMsg = document.getElementById('error-msg');
+            const email = emailField.value.trim().toLowerCase();
+
+            // Check if it ends with @gmail.com
+            if (!email.endsWith('@gmail.com')) {
+                // Show error
+                errorMsg.style.display = 'block';
+                emailField.style.borderColor = '#DC2626'; // Turn border red
+                emailField.focus();
+                return false; // STOP form submission
+            }
+
+            // Clear error if correct
+            errorMsg.style.display = 'none';
+            emailField.style.borderColor = '#E5E7EB';
+            return true; // ALLOW form submission
+        }
+    </script>
+
+</body>
+</html>

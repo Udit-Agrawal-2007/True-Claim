@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #1E2923;
+            --bg-light: #F4F5F4;
+            --accent: #587363;
+            --text-main: #1F2937;
+            --white: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; height: 100vh; overflow: hidden; background: var(--bg-light); }
+
+        /* --- LEFT PANEL --- */
+        .details-panel {
+            width: 350px; background: var(--bg-dark); color: var(--white);
+            display: flex; flex-direction: column; padding: 40px; overflow-y: auto; flex-shrink: 0;
+        }
+        .back-link { color: #A3B18A; text-decoration: none; font-weight: 600; margin-bottom: 30px; display: flex; align-items: center; gap: 8px; }
+        .back-link:hover { text-decoration: underline; }
+        .post-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; line-height: 1.2; }
+        .post-cat { color: #A3B18A; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; margin-bottom: 20px; }
+        .info-group { margin-bottom: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+        .label { font-size: 0.75rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+        .value { font-size: 1rem; font-weight: 500; }
+
+        /* --- RIGHT PANEL --- */
+        .form-panel {
+            flex: 1; padding: 50px 80px; overflow-y: auto;
+            display: flex; flex-direction: column; max-width: 900px;
+        }
+        .form-header h2 { font-size: 1.8rem; color: var(--text-main); margin-bottom: 10px; }
+        .form-header p { color: #6B7280; margin-bottom: 30px; }
+
+        .question-card, .image-select-card {
+            background: var(--white); padding: 25px; border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #E5E7EB; margin-bottom: 20px;
+        }
+
+        .q-label { display: block; font-weight: 700; color: var(--text-main); margin-bottom: 12px; font-size: 1rem; }
+        
+        input[type="text"], textarea {
+            width: 100%; padding: 14px; border: 2px solid #E5E7EB; border-radius: 10px;
+            font-size: 1rem; outline: none; transition: 0.2s; background: #FAFAFA;
+        }
+        input:focus, textarea:focus { border-color: var(--accent); background: var(--white); }
+
+        /* --- IMAGE SELECTION GRID --- */
+        .security-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;
+        }
+        .select-option {
+            position: relative; cursor: pointer; border-radius: 12px; overflow: hidden;
+            border: 3px solid transparent; transition: 0.2s; aspect-ratio: 1;
+            background: #eee;
+        }
+        .select-option img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .select-option.selected { border-color: #15803D; transform: scale(0.98); }
+        .select-option.selected::after {
+            content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: #15803D; color: white; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-submit {
+            background: var(--accent); color: white; border: none; padding: 18px; width: 100%;
+            border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; margin-top: 10px; transition: 0.2s;
+        }
+        .btn-submit:hover { background: #465e50; transform: translateY(-2px); }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+
+        #claimed-banner {
+            display: none; background: #FEF2F2; color: #991B1B; padding: 20px; border-radius: 12px;
+            margin-bottom: 30px; border: 1px solid #FCA5A5; font-weight: 600; text-align: center;
+        }
+        
+        /* WARNING BANNER FOR RENDER */
+        .server-warning {
+            background: #FFFBEB; color: #92400E; padding: 15px; border-radius: 12px;
+            margin-bottom: 25px; border: 1px solid #FCD34D; font-size: 0.9rem;
+            display: flex; align-items: start; gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="details-panel" id="leftPanel">
+        <a href="/main_page" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+        <div id="postInfo">
+            <div style="opacity:0.5;">Loading details...</div>
+        </div>
+    </div>
+
+    <div class="form-panel">
+        
+        <div id="claimed-banner">
+            <i class="fa-solid fa-lock"></i> You have already submitted a claim for this item.
+        </div>
+
+        <div class="server-warning">
+            <i class="fa-solid fa-triangle-exclamation" style="margin-top:3px;"></i>
+            <div>
+                <strong>Demo Server Notice:</strong><br>
+                The email notification feature may be restricted on this demo server (Render) due to cloud security policies. 
+                If the founder does not receive an email, the claim is still recorded in the database.
+            </div>
+        </div>
+
+        <div class="form-header">
+            <h2>Claim this Item</h2>
+            <p>Please answer the questions and identify your item from the list below.</p>
+        </div>
+
+        <form action="/process_claim" method="POST" id="claimForm" onsubmit="return validateForm()">
+            <input type="hidden" name="post_id" id="hiddenPostId">
+            <input type="hidden" name="founder_uid" id="hiddenFounderId">
+            <input type="hidden" name="post_title" id="hiddenPostTitle">
+            <input type="hidden" name="selected_image" id="selectedImageInput" required>
+
+            <div id="questionsContainer"></div>
+
+            <div class="image-select-card">
+                <label class="q-label" style="color:#DC2626;">
+                    <i class="fa-solid fa-shield-halved"></i> Security Check: Identify your Item
+                </label>
+                <p style="font-size:0.9rem; color:#666; margin-bottom:15px;">
+                    Select the image that matches the item you lost.
+                </p>
+                <div class="security-grid" id="securityGrid"></div>
+                <div id="imgError" style="color:red; font-size:0.85rem; margin-top:10px; display:none;">
+                    Please select an image.
+                </div>
+            </div>
+
+            <div class="question-card">
+                <label class="q-label">Description / Proof of Ownership <span style="color:red">*</span></label>
+                <textarea name="extra_details" rows="4" placeholder="Describe the item in detail (scratches, unique marks, contents)..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">Submit Claim</button>
+        </form>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const POST_ID = urlParams.get('id');
+        document.getElementById('hiddenPostId').value = POST_ID;
+
+        async function loadDetails() {
+            try {
+                // 1. FETCH POSTS
+                const postsRes = await fetch("{{ url_for('static', filename='posts.json') }}");
+                if (!postsRes.ok) throw new Error("Could not load posts");
+                const postsRaw = await postsRes.json();
+                
+                // 2. FIND POST
+                let post = null;
+                if (Array.isArray(postsRaw)) {
+                    for (const group of postsRaw) {
+                        if (group[POST_ID]) { post = group[POST_ID]; break; }
+                        const found = Object.values(group).find(p => p.id === POST_ID);
+                        if(found) { post = found; break; }
+                    }
+                } else if (postsRaw[POST_ID]) {
+                    post = postsRaw[POST_ID];
+                }
+
+                if (!post) {
+                    alert("Post not found.");
+                    window.location.href = '/main_page';
+                    return;
+                }
+
+                // 3. FETCH FOUNDER NAME
+                let founderName = "Community Member";
+                const founderUID = post.user_id || post.User_id || post.uid || post.UID || post.uid__;
+
+                if (founderUID) {
+                    try {
+                        const userRes = await fetch(`/get_user_name?uid=${founderUID}`);
+                        if (userRes.ok) {
+                            const userData = await userRes.json();
+                            founderName = userData.name;
+                        }
+                    } catch (err) { console.error("Error fetching user name:", err); }
+                }
+
+                // 4. CHECK CLAIM STATUS (UPDATED WITH CACHE BUSTING)
+                try {
+                    // We add a timestamp (&t=...) so the browser doesn't use old cached data
+                    const timestamp = new Date().getTime(); 
+                    const checkRes = await fetch(`/check_claim_status?post_id=${POST_ID}&t=${timestamp}`);
+                    
+                    if (checkRes.ok) {
+                        const checkData = await checkRes.json();
+                        // Debugging: Check console to see if it says true/false
+                        console.log("Claim Status Check:", checkData); 
+                        
+                        if (checkData.claimed) {
+                            document.getElementById('claimed-banner').style.display = 'block';
+                            
+                            const btn = document.getElementById('submitBtn');
+                            btn.disabled = true;
+                            btn.innerText = "Claim Already Submitted";
+                            btn.style.backgroundColor = "#ccc";
+                            
+                            const form = document.getElementById('claimForm');
+                            form.style.opacity = '0.5';
+                            form.style.pointerEvents = 'none';
+                        }
+                    }
+                } catch(e) { console.log("Claim check skipped", e); }
+
+                // 5. RENDER UI
+                document.getElementById('hiddenFounderId').value = founderUID || "unknown";
+                document.getElementById('hiddenPostTitle').value = post.title;
+
+                const leftHtml = `
+                    <div class="post-cat">${post.category || 'General'}</div>
+                    <div class="post-title">${post.title}</div>
+                    
+                    <div class="info-group">
+                        <div class="label">Found By</div>
+                        <div class="value" style="display:flex; align-items:center; gap:8px;">
+                            <i class="fa-solid fa-circle-user" style="font-size:1.2rem; color:#A3B18A;"></i> 
+                            ${founderName}
+                        </div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <div class="label">Location</div>
+                        <div class="value">${post.location}</div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="label">Time</div>
+                        <div class="value" style="font-size:0.9rem;">${post.time || post.date}</div>
+                    </div>
+                `;
+                document.getElementById('postInfo').innerHTML = leftHtml;
+
+                // 6. RENDER QUESTIONS
+                const qContainer = document.getElementById('questionsContainer');
+                qContainer.innerHTML = '';
+                if (post.questions && post.questions.length > 0) {
+                    post.questions.forEach((q, index) => {
+                        qContainer.innerHTML += `
+                            <div class="question-card">
+                                <label class="q-label">Question ${index + 1}: ${q}</label>
+                                <input type="text" name="answer_${index}" required placeholder="Your answer...">
+                                <input type="hidden" name="question_${index}" value="${q}">
+                            </div>
+                        `;
+                    });
+                } else {
+                    qContainer.innerHTML = `<div class="question-card"><p style="color:#666">No specific questions.</p></div>`;
+                }
+
+                // --- 7. RENDER IMAGES (SHUFFLED LOGIC) ---
+                const grid = document.getElementById('securityGrid');
+                let imageIndices = [1, 2, 3, 4, 5, 6];
+                
+                // Shuffle
+                for (let i = imageIndices.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [imageIndices[i], imageIndices[j]] = [imageIndices[j], imageIndices[i]];
+                }
+
+                const mainExt = post.ext ? post.ext : 'jpg';
+                let gridHtml = '';
+                const timestamp = new Date().getTime(); 
+
+                imageIndices.forEach(i => {
+                    let currentExt = (i === 1) ? mainExt : 'jpg';
+                    gridHtml += `
+                        <div class="select-option" onclick="selectImage(this, '${i}.${currentExt}')">
+                            <img src="/static/posts/${POST_ID}/${i}.${currentExt}?t=${timestamp}" 
+                                 onerror="if(this.src.endsWith('jpg?t=${timestamp}')) this.src='/static/posts/${POST_ID}/${i}.jpeg?t=${timestamp}'; else this.src='https://placehold.co/150?text=Img+${i}';">
+                        </div>
+                    `;
+                });
+                grid.innerHTML = gridHtml;
+
+            } catch (e) {
+                console.error("Error loading details:", e);
+                alert("Error loading page details.");
+            }
+        }
+
+        function selectImage(element, filename) {
+            document.querySelectorAll('.select-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('selectedImageInput').value = filename;
+            document.getElementById('imgError').style.display = 'none';
+        }
+
+        function validateForm() {
+            const selected = document.getElementById('selectedImageInput').value;
+            if (!selected) {
+                document.getElementById('imgError').style.display = 'block';
+                document.querySelector('.image-select-card').scrollIntoView({ behavior: 'smooth' });
+                return false;
+            }
+            return true;
+        }
+
+        loadDetails();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Portal - The AI Lost & Found</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --sidebar-bg: #1E2923;
+            --main-bg: #F4F5F4;
+            --accent: #587363;
+            --brand-light: #A3B18A;
+            --text-dark: #1F2937;
+            --text-muted: #6B7280;
+            --white: #FFFFFF;
+            --glass: rgba(255, 255, 255, 0.7);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; min-height: 100vh; background: var(--main-bg); color: var(--text-dark); }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 250px; background: var(--sidebar-bg); color: var(--white);
+            display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; gap: 20px;
+            position: sticky; top: 0; height: 100vh;
+        }
+        .brand { font-size: 1.3rem; font-weight: 800; color: var(--brand-light); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-item {
+            padding: 10px 14px; border-radius: 8px; color: #D1D5DB; cursor: pointer;
+            display: flex; align-items: center; gap: 10px; font-weight: 500; transition: 0.2s; font-size: 0.9rem;
+            text-decoration: none;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-item.active { background: var(--accent); color: white; }
+
+        /* --- CONTENT AREA --- */
+        .content { flex: 1; padding: 60px 40px; overflow-y: auto; max-width: 1100px; margin: 0 auto; }
+        
+        /* HERO SECTION */
+        .hero { margin-bottom: 80px; text-align: center; position: relative; }
+        .hero h1 { 
+            font-size: 3rem; font-weight: 800; margin-bottom: 20px; color: var(--sidebar-bg); 
+            line-height: 1.1; letter-spacing: -1px;
+        }
+        .hero span { color: var(--accent); }
+        .hero p { color: var(--text-muted); font-size: 1.2rem; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+
+        /* FEATURE GRID */
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 80px; }
+        .feature-card { 
+            background: var(--white); padding: 30px; border-radius: 20px; 
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); transition: transform 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .feature-card:hover { transform: translateY(-5px); }
+        .icon-box { 
+            width: 50px; height: 50px; background: #eef2f0; color: var(--accent); 
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; 
+            font-size: 1.4rem; margin-bottom: 20px; 
+        }
+        .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: var(--text-dark); }
+        .feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+
+        /* --- THE CORE INNOVATION SECTION (Dark Theme) --- */
+        .tech-deep-dive {
+            background: #111827; color: white;
+            border-radius: 30px; padding: 50px;
+            margin-bottom: 80px; position: relative; overflow: hidden;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;
+        }
+        
+        /* Background Glow Effect */
+        .tech-deep-dive::before {
+            content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(163,177,138,0.15) 0%, rgba(0,0,0,0) 70%);
+            z-index: 0; pointer-events: none;
+        }
+
+        .tech-content { position: relative; z-index: 1; }
+        .badge { 
+            background: linear-gradient(135deg, #A3B18A, #587363); color: white; 
+            padding: 6px 14px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; display: inline-block;
+        }
+        .tech-content h2 { font-size: 2.2rem; margin-bottom: 20px; line-height: 1.2; }
+        .tech-content p { color: #9CA3AF; margin-bottom: 30px; line-height: 1.6; }
+
+        .step-list { display: flex; flex-direction: column; gap: 20px; }
+        .step { display: flex; gap: 15px; align-items: flex-start; }
+        .step-num { 
+            background: rgba(255,255,255,0.1); width: 30px; height: 30px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+        }
+        
+        .visual-demo {
+            position: relative; z-index: 1;
+            background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .demo-img { 
+            width: 100%; aspect-ratio: 1; border-radius: 8px; background: #374151; 
+            display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #6B7280;
+            position: relative; overflow: hidden;
+        }
+        /* Simulating the AI Images */
+        .demo-img::after { content: 'AI'; position: absolute; bottom: 4px; right: 4px; font-size: 0.5rem; opacity: 0.5; }
+        
+        /* --- NEW SECTIONS STYLES --- */
+        .section-header { margin-bottom: 30px; }
+        .section-header h2 { font-size: 2rem; color: var(--sidebar-bg); font-weight: 800; }
+        .section-header p { color: var(--text-muted); }
+
+        .team-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 80px;
+        }
+        .team-card {
+            background: var(--white); padding: 30px; border-radius: 20px; text-align: center;
+            border: 1px solid rgba(0,0,0,0.05); transition: 0.3s;
+        }
+        .team-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .avatar {
+            width: 80px; height: 80px; background: var(--sidebar-bg); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; margin: 0 auto 15px; font-weight: 700;
+        }
+        .avatar.ai { background: linear-gradient(135deg, #4285F4, #9B72CB, #D96570); }
+        .team-name { font-weight: 700; font-size: 1.1rem; color: var(--text-dark); margin-bottom: 5px; }
+        .team-role { font-size: 0.8rem; color: var(--accent); text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
+
+        .roadmap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 80px; }
+        .roadmap-card {
+            background: #E8F5E9; border-left: 5px solid var(--accent); padding: 25px; border-radius: 12px;
+        }
+        .roadmap-card h4 { color: var(--sidebar-bg); font-size: 1.2rem; margin-bottom: 10px; font-weight: 800; }
+        
+        .contact-banner {
+            background: var(--sidebar-bg); color: white; padding: 40px; border-radius: 20px;
+            text-align: center; margin-bottom: 50px;
+        }
+        .contact-email { 
+            display: inline-block; margin-top: 15px; color: var(--brand-light); 
+            font-size: 1.5rem; font-weight: 700; text-decoration: none; 
+        }
+        .contact-email:hover { text-decoration: underline; color: white; }
+
+        /* TECH STACK FOOTER */
+        .tech-stack { text-align: center; padding-top: 20px; border-top: 1px solid #E5E7EB; }
+        .tech-stack h4 { font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; letter-spacing: 1px; }
+        .stack-icons { display: flex; justify-content: center; gap: 30px; font-size: 1.8rem; color: var(--sidebar-bg); opacity: 0.7; }
+        
+        @media (max-width: 900px) {
+            .feature-grid, .team-grid, .roadmap-grid { grid-template-columns: 1fr; }
+            .tech-deep-dive { grid-template-columns: 1fr; padding: 30px; }
+            .sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <a href="/main_page" class="brand"><i class="fa-solid fa-compass"></i> True Claim</a>
+        <div class="nav-section">
+            <a href="/main_page" class="nav-item"><i class="fa-solid fa-arrow-left"></i> Back to Feed</a>
+            <a href="#" class="nav-item active"><i class="fa-solid fa-circle-info"></i> About</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <section class="hero">
+            <h1>Trust is <span>Reclaimed.</span></h1>
+            <p>True Claim isn't just a database. It's an intelligent ecosystem that uses Generative AI to ensure lost items find their <i>true</i> owners, not imposters.</p>
+        </section>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="icon-box"><i class="fa-solid fa-layer-group"></i></div>
+                <h3>Smart Matching</h3>
+                <p>We don't just list items. We categorize and tag found objects with precision, making search instant and accurate for distressed owners.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box"><i class="fa-solid fa-user-shield"></i></div>
+                <h3>Anti-Fraud Core</h3>
+                <p>The biggest problem with Lost & Found is false claims. Our system is built entirely around preventing theft of found goods.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box"><i class="fa-solid fa-envelope-open-text"></i></div>
+                <h3>Privacy First</h3>
+                <p>Finders and Owners never exchange phone numbers publicly. Our built-in secure mail system handles the initial contact.</p>
+            </div>
+        </div>
+
+        <section class="tech-deep-dive">
+            <div class="tech-content">
+                <div class="badge">Powered by Stability AI</div>
+                <h2>The "Visual Riddle" Protocol</h2>
+                <p>How do we prove you own the item without showing you the photo? We use Generative AI to create a "Visual Riddle."</p>
+                
+                <div class="step-list">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div>
+                            <strong>Image Extraction</strong>
+                            <div style="font-size: 0.85rem; color: #9CA3AF;">The Finder uploads a real photo of the item (e.g., a Black Watch).</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div>
+                            <strong>AI Hallucination</strong>
+                            <div style="font-size: 0.85rem; color: #9CA3AF;">Our backend (SDXL) generates 5 hyper-realistic "fake" versions of that watch and 1 AI-reconstruction of the real one. </div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div>
+                            <strong>The Selection Test</strong>
+                            <div style="font-size: 0.85rem; color: #9CA3AF;">To claim the item, the user must pick the <i>correct</i> watch from a grid of 6 AI images. Only the true owner knows the specific scratches, dial color, and strap details.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="visual-demo">
+                <div style="margin-bottom: 10px; font-weight: 700; font-size: 0.9rem; text-align: center; color: #A3B18A;">
+                    <i class="fa-solid fa-eye"></i> What the Claimant Sees
+                </div>
+                <div class="demo-grid">
+                    <div class="demo-img" style="border: 2px solid #ef4444;"><i class="fa-solid fa-stopwatch"></i><br>Fake</div>
+                    <div class="demo-img" style="border: 2px solid #ef4444;"><i class="fa-solid fa-stopwatch"></i><br>Fake</div>
+                    <div class="demo-img" style="border: 2px solid #ef4444;"><i class="fa-solid fa-stopwatch"></i><br>Fake</div>
+                    <div class="demo-img" style="border: 2px solid #22c55e; background: rgba(34,197,94,0.1); color: #22c55e;"><i class="fa-solid fa-stopwatch"></i><br>Real (AI Clone)</div>
+                    <div class="demo-img" style="border: 2px solid #ef4444;"><i class="fa-solid fa-stopwatch"></i><br>Fake</div>
+                    <div class="demo-img" style="border: 2px solid #ef4444;"><i class="fa-solid fa-stopwatch"></i><br>Fake</div>
+                </div>
+                <div style="margin-top: 15px; font-size: 0.75rem; text-align: center; color: #6B7280;">
+                    <em>"Select the item that belongs to you."</em>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-header">
+            <h2><i class="fa-solid fa-rocket" style="color:var(--accent)"></i> Future Roadmap</h2>
+            <p>We are constantly evolving. Here is what's coming next to make True Claim safer.</p>
+        </div>
+        <div class="roadmap-grid">
+            <div class="roadmap-card">
+                <h4>🤖 AI Credibility Analysis</h4>
+                <p>We are building a system that compares the claimant's written answers against the visual data of the item using Gemini Pro. It will generate a <b>"Trust Score"</b> to advise the finder if a claim looks genuine or suspicious.</p>
+            </div>
+            <div class="roadmap-card">
+                <h4>🛡️ Behavioral Fraud Detection</h4>
+                <p>To prevent spam, our system will monitor user activity. If a user is detected sending frequent claims across multiple unrelated items, they will be flagged as a potential fraudster and restricted.</p>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2><i class="fa-solid fa-code" style="color:var(--accent)"></i> Team Hornbills</h2>
+            <p>The minds behind the code.</p>
+        </div>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="avatar">U</div>
+                <div class="team-name">Udit Agrawal</div>
+                <div class="team-role">Lead Developer</div>
+            </div>
+            <div class="team-card">
+                <div class="avatar">K</div>
+                <div class="team-name">Kumud Saraswat</div>
+                <div class="team-role">Lead Developer</div>
+            </div>
+            <div class="team-card">
+                <div class="avatar ai"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <div class="team-name">Gemini AI</div>
+                <div class="team-role">Lead Developer / Brains</div>
+            </div>
+        </div>
+
+        <div class="contact-banner">
+            <h2><i class="fa-solid fa-envelope"></i> Get in Touch</h2>
+            <p>Have feedback or want to collaborate? Email us directly.</p>
+            <a href="mailto:teamhornbills@gmail.com" class="contact-email">teamhornbills@gmail.com</a>
+        </div>
+
+        <div class="tech-stack">
+            <h4>Built With</h4>
+            <div class="stack-icons">
+                <i class="fa-brands fa-python" title="Python"></i>
+                <i class="fa-brands fa-html5" title="HTML5"></i>
+                <i class="fa-solid fa-server" title="Flask"></i>
+                <i class="fa-solid fa-wand-magic-sparkles" title="Stability AI"></i>
+                <i class="fa-solid fa-envelope" title="SMTP"></i>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>

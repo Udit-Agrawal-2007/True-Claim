@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Successful</title>
+    <meta http-equiv="refresh" content="3;url=/main_page">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-light: #F4F5F4;
+            --accent: #587363;       /* Sage Green */
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --white: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-light);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 50px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Checkmark Circle */
+        .icon-container {
+            width: 80px;
+            height: 80px;
+            background: #E8F5E9; /* Very light green */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px auto;
+            position: relative;
+        }
+
+        .checkmark-svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--accent);
+            stroke-width: 4;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: drawCheck 0.8s ease-in-out 0.4s forwards;
+        }
+
+        h1 {
+            color: var(--text-main);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 0.6s forwards;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 0.8s forwards;
+        }
+
+        /* The Manual Link */
+        .manual-link {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 1s forwards;
+        }
+        .manual-link:hover { text-decoration: underline; }
+
+        /* Progress Bar (The 3 Second Timer) */
+        .progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: #E5E7EB;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            animation: fillBar 3s linear forwards;
+        }
+
+        /* --- KEYFRAMES --- */
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes drawCheck {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes fillBar {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="icon-container">
+            <svg class="checkmark-svg" viewBox="0 0 52 52">
+                <path d="M14 27 L22 35 L38 17" />
+            </svg>
+        </div>
+
+        <h1>Login Successful</h1>
+        <p>Welcome back! Redirecting you to the dashboard...</p>
+
+        <a href="/main_page" class="manual-link">Click here if not redirected</a>
+
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+</body>
+</html>

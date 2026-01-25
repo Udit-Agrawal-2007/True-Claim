@@ -1,0 +1,20 @@
+{
+    "d6d5ed04-9039-4e95-ada8-411c250fdc62": {
+        "username": "Test1",
+        "name": "John Doe",
+        "email": "impulse.rewiremind@gmail.com",
+        "password": "1234"
+    },
+    "1532cf9f-0be8-4716-93ca-99909d93d3ad": {
+        "username": "Test2",
+        "name": "arsvffrd",
+        "email": "random@gmail.com",
+        "password": "1234"
+    },
+    "026a8c0f-04f9-4a47-90ee-40745fb48c7f": {
+        "username": "aaa",
+        "name": "aaa",
+        "email": "random@gmail.com",
+        "password": "aaa"
+    }
+}

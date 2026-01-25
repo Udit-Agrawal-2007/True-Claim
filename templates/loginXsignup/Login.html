@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --bg-dark: #1E2923;      /* Dark Sidebar Color */
+            --bg-light: #F4F5F4;     /* Light Background */
+            --accent: #587363;       /* Sage Green */
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --white: #FFFFFF;
+            --border-color: #E5E7EB;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-light);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* --- CARD CONTAINER --- */
+        .login-wrapper {
+            background: var(--white);
+            width: 100%;
+            max-width: 900px;
+            min-height: 550px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- LEFT SIDE (Brand) --- */
+        .brand-section {
+            flex: 1;
+            background-color: var(--bg-dark);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle Background Decoration */
+        .brand-section::after {
+            content: '';
+            position: absolute;
+            top: -50px; right: -50px;
+            width: 250px; height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #A3B18A; /* Light Sage Accent */
+            display: flex; align-items: center; gap: 15px;
+            z-index: 2;
+        }
+
+        .tagline {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            opacity: 0.85;
+            max-width: 90%;
+            z-index: 2;
+        }
+
+        /* --- RIGHT SIDE (Form) --- */
+        .form-section {
+            flex: 1.2;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header-text { margin-bottom: 35px; }
+        .header-text h2 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+        .header-text p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- INPUT ALIGNMENT FIX --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        /* Wrapper to strictly control Icon + Input alignment */
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%); /* Perfectly vertically centered */
+            color: #9CA3AF;
+            font-size: 1rem;
+            pointer-events: none; /* Allows click-through to input */
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 14px 14px 48px; /* Precise padding for icon */
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            outline: none;
+            color: var(--text-main);
+            background: #FAFAFA;
+        }
+
+        input:focus {
+            background: #FFFFFF;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(88, 115, 99, 0.1);
+        }
+
+        input::placeholder { color: #D1D5DB; }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            margin-top: 10px;
+        }
+        .btn-primary:hover {
+            background-color: #465e50;
+            transform: translateY(-1px);
+        }
+
+        /* Divider Alignment Fix */
+        .divider-container {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .line {
+            flex: 1;
+            height: 1px;
+            background-color: var(--border-color);
+        }
+        .divider-text {
+            padding: 0 15px;
+            color: #9CA3AF;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background-color: white;
+            color: var(--text-main);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .btn-secondary:hover {
+            border-color: var(--text-main);
+            background-color: #F9FAFB;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .login-wrapper { flex-direction: column; height: auto; border-radius: 16px; }
+            .brand-section { padding: 40px 30px; text-align: center; }
+            .logo { justify-content: center; }
+            .form-section { padding: 40px 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="brand-section">
+            <div class="logo">
+                <i class="fa-solid fa-compass"></i> True Claim
+            </div>
+            <p class="tagline">
+                The centralized Lost & Found system. <br>
+                Secure, simple, and connected.
+            </p>
+        </div>
+
+        <div class="form-section">
+            <div class="header-text">
+                <h2>Welcome Back</h2>
+                <p>Enter your details to access your account.</p>
+            </div>
+
+            <form action="/Entry" method="POST">
+                
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Log In</button>
+            </form>
+
+            <div class="divider-container">
+                <div class="line"></div>
+                <span class="divider-text">OR</span>
+                <div class="line"></div>
+            </div>
+
+            <button type="button" class="btn-secondary" onclick="location.href='/SignUp'">
+                Create New Account
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>

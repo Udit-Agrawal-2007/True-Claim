@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #1E2923;
+            --bg-light: #F4F5F4;
+            --accent: #DC2626; /* Red accent for LOST theme */
+            --accent-hover: #B91C1C;
+            --text-main: #1F2937;
+            --white: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; height: 100vh; overflow: hidden; background: var(--bg-light); }
+
+        /* --- LEFT PANEL --- */
+        .details-panel {
+            width: 350px; background: var(--bg-dark); color: var(--white);
+            display: flex; flex-direction: column; padding: 40px; overflow-y: auto; flex-shrink: 0;
+        }
+        .back-link { color: #A3B18A; text-decoration: none; font-weight: 600; margin-bottom: 30px; display: flex; align-items: center; gap: 8px; }
+        .back-link:hover { text-decoration: underline; }
+        
+        .post-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; line-height: 1.2; }
+        .post-cat { color: #FCA5A5; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; margin-bottom: 20px; }
+        
+        .info-group { margin-bottom: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+        .label { font-size: 0.75rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+        .value { font-size: 1rem; font-weight: 500; }
+
+        /* Reference Image in Left Panel */
+        .ref-img { 
+            width: 100%; height: 200px; object-fit: cover; border-radius: 12px; 
+            border: 2px solid rgba(255,255,255,0.1); margin-top: 10px; 
+        }
+
+        /* --- RIGHT PANEL --- */
+        .form-panel {
+            flex: 1; padding: 50px 80px; overflow-y: auto;
+            display: flex; flex-direction: column; max-width: 900px;
+        }
+        .form-header h2 { font-size: 1.8rem; color: var(--text-main); margin-bottom: 10px; }
+        .form-header p { color: #6B7280; margin-bottom: 30px; }
+
+        .contact-card {
+            background: var(--white); padding: 25px; border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #E5E7EB; margin-bottom: 20px;
+        }
+
+        .q-label { display: block; font-weight: 700; color: var(--text-main); margin-bottom: 12px; font-size: 1rem; }
+        
+        textarea {
+            width: 100%; padding: 14px; border: 2px solid #E5E7EB; border-radius: 10px;
+            font-size: 1rem; outline: none; transition: 0.2s; background: #FAFAFA;
+        }
+        textarea:focus { border-color: var(--accent); background: var(--white); }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #E5E7EB; border-radius: 12px; padding: 30px;
+            text-align: center; cursor: pointer; transition: 0.2s; position: relative;
+        }
+        .upload-area:hover { border-color: var(--accent); background: #FEF2F2; }
+        .upload-icon { font-size: 2rem; color: #9CA3AF; margin-bottom: 10px; }
+        #preview { max-height: 200px; margin-top: 15px; border-radius: 8px; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        .btn-submit {
+            background: var(--accent); color: white; border: none; padding: 18px; width: 100%;
+            border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; margin-top: 10px; transition: 0.2s;
+        }
+        .btn-submit:hover { background: var(--accent-hover); transform: translateY(-2px); }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+
+        #contacted-banner {
+            display: none; background: #ECFDF5; color: #065F46; padding: 20px; border-radius: 12px;
+            margin-bottom: 30px; border: 1px solid #6EE7B7; font-weight: 600; text-align: center;
+        }
+
+        /* WARNING BANNER FOR RENDER */
+        .server-warning {
+            background: #FFFBEB; color: #92400E; padding: 15px; border-radius: 12px;
+            margin-bottom: 25px; border: 1px solid #FCD34D; font-size: 0.9rem;
+            display: flex; align-items: start; gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="details-panel" id="leftPanel">
+        <a href="/main_page" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+        <div id="postInfo">
+            <div style="opacity:0.5;">Loading details...</div>
+        </div>
+    </div>
+
+    <div class="form-panel">
+
+        <div class="server-warning">
+            <i class="fa-solid fa-triangle-exclamation" style="margin-top:3px;"></i>
+            <div>
+                <strong>Demo Server Notice:</strong><br>
+                The email notification feature may be restricted on this demo server (Render) due to cloud security policies. 
+                If the owner does not receive an email, the report is still recorded in the database.
+            </div>
+        </div>
+
+        <div id="contacted-banner">
+            <i class="fa-solid fa-envelope-circle-check"></i> You have already contacted this person.
+        </div>
+
+        <div class="form-header">
+            <h2>I Found This Item</h2>
+            <p>Send a message to the owner. You must attach a photo of the item you found as proof.</p>
+        </div>
+
+        <form action="/process_found_report" method="POST" enctype="multipart/form-data" id="contactForm" onsubmit="return validateForm()">
+            <input type="hidden" name="post_id" id="hiddenPostId">
+            <input type="hidden" name="requester_uid" id="hiddenRequesterId">
+            <input type="hidden" name="post_title" id="hiddenPostTitle">
+
+            <div class="contact-card">
+                <label class="q-label">Message to Owner</label>
+                <textarea name="message" rows="5" required placeholder="Hi, I think I found your item near the cafeteria..."></textarea>
+            </div>
+
+            <div class="contact-card">
+                <label class="q-label">Proof of Item <span style="color:red">*</span></label>
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <i class="fa-solid fa-camera upload-icon"></i>
+                    <p style="font-size:0.9rem; color:#666; font-weight:600;">Click to upload photo</p>
+                    <input type="file" id="fileInput" name="proof_image" accept="image/*" style="display:none" onchange="previewImage(event)" required>
+                    <img id="preview">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">Send Info</button>
+        </form>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const POST_ID = urlParams.get('id');
+        document.getElementById('hiddenPostId').value = POST_ID;
+
+        async function loadDetails() {
+            try {
+                // 1. FETCH REQUESTS (Not posts.json) & USERS
+                const [reqRes, usersRes] = await Promise.all([
+                    fetch("{{ url_for('static', filename='requests.json') }}"),
+                    fetch("{{ url_for('static', filename='Users.json') }}") // Fallback if needed, but we use API mostly
+                ]);
+
+                const reqRaw = await reqRes.json();
+                
+                // 2. FIND POST
+                let post = null;
+                if (Array.isArray(reqRaw)) {
+                    for (const group of reqRaw) {
+                        if (group[POST_ID]) { post = group[POST_ID]; break; }
+                        const found = Object.values(group).find(p => p.id === POST_ID);
+                        if(found) { post = found; break; }
+                    }
+                } else if (reqRaw[POST_ID]) {
+                    post = reqRaw[POST_ID];
+                }
+
+                if (!post) {
+                    alert("Request not found");
+                    window.location.href = '/main_page';
+                    return;
+                }
+
+                // 3. FETCH REQUESTER NAME (Using your Secure API)
+                let requesterName = "Community Member";
+                const requesterUID = post.UID || post.uid;
+
+                if (requesterUID) {
+                    try {
+                        const userRes = await fetch(`/get_user_name?uid=${requesterUID}`);
+                        if (userRes.ok) {
+                            const userData = await userRes.json();
+                            requesterName = userData.name;
+                        }
+                    } catch (err) { console.error(err); }
+                }
+
+                // 4. CHECK CONTACT STATUS
+                try {
+                    const checkRes = await fetch(`/check_contact_status?post_id=${POST_ID}`);
+                    const checkData = await checkRes.json();
+                    if (checkData.contacted) {
+                        document.getElementById('contacted-banner').style.display = 'block';
+                        document.getElementById('submitBtn').disabled = true;
+                        document.getElementById('submitBtn').innerText = "Already Contacted";
+                        document.getElementById('contactForm').style.opacity = '0.5';
+                        document.getElementById('contactForm').style.pointerEvents = 'none';
+                    }
+                } catch(e) {}
+
+                // 5. RENDER LEFT PANEL
+                document.getElementById('hiddenRequesterId').value = requesterUID || "unknown";
+                document.getElementById('hiddenPostTitle').value = post.title;
+
+                // Try to load reference image if user provided one
+                const refImageHtml = `
+                    <div class="info-group">
+                        <div class="label">Reference Image provided by Owner</div>
+                        <img src="/static/posts/${POST_ID}/1.jpg" class="ref-img" onerror="this.style.display='none'">
+                    </div>
+                `;
+
+                const leftHtml = `
+                    <div class="post-cat" style="color:#FCA5A5;">${post.category || 'General'}</div>
+                    <div class="post-title">${post.title}</div>
+                    
+                    <div class="info-group">
+                        <div class="label">Requested By</div>
+                        <div class="value"><i class="fa-solid fa-user"></i> ${requesterName}</div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <div class="label">Description</div>
+                        <div class="value" style="font-size:0.95rem; line-height:1.5;">${post.description}</div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="label">Last Seen</div>
+                        <div class="value">${post.location}</div>
+                        <div class="value" style="font-size:0.9rem; opacity:0.8;">${post.time}</div>
+                    </div>
+
+                    ${refImageHtml}
+                `;
+                document.getElementById('postInfo').innerHTML = leftHtml;
+
+            } catch (e) {
+                console.error("Error:", e);
+                alert("Error loading page details.");
+            }
+        }
+
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('preview');
+            const icon = document.querySelector('.upload-icon');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    icon.style.display = 'none';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function validateForm() {
+            const file = document.getElementById('fileInput').value;
+            if(!file) {
+                alert("Please attach a photo of the item you found.");
+                return false;
+            }
+            return true;
+        }
+
+        loadDetails();
+    </script>
+</body>
+</html>
